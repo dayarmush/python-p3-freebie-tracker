@@ -1,5 +1,6 @@
 from sqlalchemy import ForeignKey, Column, Integer, String, MetaData
-from sqlalchemy.orm import relationship, backref
+from sqlalchemy.orm import relationship
+from sqlalchemy.ext.associationproxy import association_proxy
 from sqlalchemy.ext.declarative import declarative_base
 
 convention = {
@@ -17,6 +18,8 @@ class Company(Base):
     founding_year = Column(Integer())
 
     freebies = relationship('Freebie', backref='company')
+    devs = association_proxy('freebies', 'dev',
+        creator=lambda dev: Freebie(dev=dev))
 
     def __repr__(self):
         return f'<Company {self.name}>'
@@ -27,7 +30,9 @@ class Dev(Base):
     id = Column(Integer(), primary_key=True)
     name= Column(String())
 
-    freebies = relationship('Freebie', backref='devs')
+    freebies = relationship('Freebie', backref='dev')
+    companies = association_proxy('freebies', 'company',
+        creator=lambda comp: Freebie(comp=comp))
 
     def __repr__(self):
         return f'<Dev {self.name}>'

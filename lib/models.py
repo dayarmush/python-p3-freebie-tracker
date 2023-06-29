@@ -20,9 +20,17 @@ class Company(Base):
     freebies = relationship('Freebie', backref='company')
     devs = association_proxy('freebies', 'dev',
         creator=lambda dev: Freebie(dev=dev))
+    
+    def give_freebie(self, dev, item_name, value):
+        return Freebie(item_name=item_name, value=value, company_id=self.id, dev_id=dev.id)
+    
+    @classmethod
+    def oldest_company(cls, session):
+        oldest_company = session.query(cls).order_by(cls.founding_year.asc()).first()
+        return oldest_company
 
     def __repr__(self):
-        return f'<Company {self.name}>'
+        return f'<Company {self.name} Founding Year: {self.founding_year}>'
 
 class Dev(Base):
     __tablename__ = 'devs'

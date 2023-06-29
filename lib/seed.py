@@ -16,7 +16,7 @@ def create_company():
     companies = [ 
         Company(
         name=fake.company(), 
-        founding_year=fake.date_this_century()
+        founding_year=fake.random_int(min=1900, max=2021)
         ) for i in range(100)]
     session.add_all(companies)
     session.commit()

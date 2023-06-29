@@ -10,6 +10,8 @@ if __name__ == '__main__':
     session = Session()
 
     dev1 = session.query(Dev).first()
+    dev = session.query(Dev).limit(2).all()
+    dev2 = dev[1]
     company1 = session.query(Company).first()
     freebie1 = session.query(Freebie).first()
 

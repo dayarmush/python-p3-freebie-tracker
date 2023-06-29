@@ -41,6 +41,14 @@ class Dev(Base):
     freebies = relationship('Freebie', backref='dev')
     companies = association_proxy('freebies', 'company',
         creator=lambda comp: Freebie(comp=comp))
+    
+    def received_one(self, item_name):
+        return bool([freebie for freebie in self.freebies if freebie.item_name == item_name])
+    
+    def give_away(self, dev, freebie):
+        if freebie in self.freebies:
+            freebie.dev_id = dev.id
+        return dev.freebies
 
     def __repr__(self):
         return f'<Dev {self.name}>'
